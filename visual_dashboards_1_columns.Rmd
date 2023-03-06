@@ -1,0 +1,42 @@
+---
+title: "Dashbords from Evans UW-columns"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+---
+
+[comment]: two columns, two plots on the right column
+
+```{r setup, include=FALSE}
+library(flexdashboard) # always
+```
+
+
+
+Column {data-width=450}
+-----------------------------------------------------------------------
+
+### Write here a title!
+
+```{r}
+readRDS("BoxReducedLunch.rds")
+```
+
+
+[comment]: this column is wider
+
+Column {data-width=550}
+-----------------------------------------------------------------------
+
+### Write here another title!
+
+```{r}
+readRDS("LolliSchoolsLocation.rds")
+```
+
+### and another one will be needed here! 
+
+```{r}
+readRDS("barsCrimeDay.rds")
+```
+

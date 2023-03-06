@@ -1,0 +1,158 @@
+---
+title: "Dashbords from Evans UW-pages and interactive"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(plotly)
+library(dygraphs)
+```
+
+[comment]: first page notice use of ===
+
+Crime and Safety {data-orientation=rows}
+=====================================
+
+Row
+-----------------------------------------------------------------------
+
+### Chart A
+
+```{r}
+
+ggplotly(readRDS("barsCrimeDay.rds"))
+```
+
+Row
+--------------
+### Chart B
+
+```{r}
+ggplotly(readRDS("PointCitiesCluster.rds"))
+```
+
+
+[comment]: second page  AND orientation rows
+
+School {data-orientation=colums}
+=====================================
+
+Column {.tabset .tabset-fade}
+-----------------------------------------------------------------------
+
+### Chart C
+
+```{r}
+
+ggplotly(readRDS("LolliSchoolsLocation.rds"))
+
+```
+
+
+### Chart D
+
+```{r}
+ggplotly(readRDS("BoxReducedLunch.rds"))
+```
+
+Time
+=========
+
+### Crime (I)
+
+```{r}
+ggplotly(readRDS("Line_crimeTime.rds"))
+```
+### Crime (II)
+```{r}
+crimeWeeklyCount=readRDS("crimeWeeklyCount.rds")
+
+library(xts)
+library(dygraphs)
+dygraph(xts(crimeWeeklyCount[,-1], #date
+            order.by=crimeWeeklyCount[,1]))%>%#counts
+    dyRangeSelector()
+```
+
+
+Maps (I)
+=====================================
+
+Column {.tabset .tabset-fade}
+------------------
+
+### Colored polygons
+
+```{r}
+ggplotly(readRDS("polygonMapCrime.rds"))
+```
+
+### Points
+
+```{r}
+pointMapCrime=readRDS("pointMapCrime.rds")
+
+textTitle="Crime events in Seattle by year and type"
+textCapt="Source: Seattle Open Data Portal\nand Seattle Police Department."
+subText="Showing the Worse 4 Neighborhoods (2019-2022)"
+
+ggplotly(pointMapCrime  +
+  theme(plot.margin = margin(2, 2, 2, 1, "cm"),
+        panel.spacing = unit(0, "lines"),
+        ))%>%
+layout(legend = list(orientation = "v", x = -0.2, y =0.5),
+       title = list(text = paste0(textTitle,
+                                    '<br>',
+                                    '<sup>',
+                                    subText,
+                                    '</sup>')),
+       annotations = 
+ list(x = 1, y = -0.2, text = textCapt, 
+      showarrow = F, xref='paper', yref='paper', 
+      xanchor='right', yanchor='auto', xshift=0, yshift=0,
+      font=list(size=10)))
+    
+```
+
+Maps (II)
+=====================================
+
+Column {.tabset .tabset-fade}
+-------------
+
+### Independent
+
+```{r}
+library(leaflet)
+library(manipulateWidget)
+combineWidgets(readRDS("LeafletPolyg2019.rds"),
+     readRDS("LeafletPolyg2020.rds"),
+     readRDS("LeafletPolyg2021.rds"),
+     readRDS("LeafletPolyg2022.rds"))
+```
+
+### Syncronized
+
+```{r}
+library(leaflet.minicharts)
+library(manipulateWidget)
+combineWidgets(readRDS("LeafletPoints2019.rds")%>%
+    syncWith("maps"),
+     readRDS("LeafletPoints2020.rds")%>%
+    syncWith("maps"),
+    
+     readRDS("LeafletPoints2021.rds")%>%
+    syncWith("maps"),
+    
+     readRDS("LeafletPoints2022.rds")%>%
+    syncWith("maps"))
+```
+
+### Grouped points
+
+```{r}
+readRDS("LeafletPoints2019_clus.rds")
+```

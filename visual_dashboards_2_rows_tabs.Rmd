@@ -1,0 +1,46 @@
+---
+title: "Dashbords from Evans UW -rows and tabs"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: rows
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+```
+
+[comment]: # three plot here with fade effect
+
+Row {.tabset .tabset-fade}
+-----------------------------------------------------------------------
+
+### Chart A
+
+```{r}
+readRDS("barsCrimeDay.rds")
+```
+
+### Chart B
+
+```{r}
+readRDS("PointCitiesCluster.rds")
+```
+
+
+### Chart C
+
+```{r}
+readRDS("LolliSchoolsLocation.rds")
+```
+
+[comment]: # one plot here
+
+Row 
+-----------------------------------------------------------------------
+
+### Chart D
+
+```{r}
+readRDS("BoxReducedLunch.rds")
+```
+

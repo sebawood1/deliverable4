@@ -1,0 +1,311 @@
+---
+title: "Final Project (part 1)"
+output:
+  html_document:
+    code_folding: "hide"
+    df_print: paged
+---
+
+Let's prepara our data for the plots.
+
+
+```{r dataPrep-LolliSchoolsLocation}
+# clean memory
+rm(list = ls()) 
+# link
+link='eduwa.rda'
+
+#getting the data TABLE from the file:
+load(file=link)
+eduwa=eduwa[complete.cases(eduwa),]#no missing values
+
+
+# Preparing Frequency Table
+absoluteT=table(eduwa$LocaleType) 
+propT=prop.table(absoluteT)*100
+tableFreq=as.data.frame(absoluteT)
+names(tableFreq)=c("Locale","Count")
+tableFreq$Percent=as.vector(propT)
+
+# order of locales by percent
+tableFreq=tableFreq[order(tableFreq$Percent),]
+
+# adding columns to frequency table for lollipop
+tableFreq$gap=tableFreq$Percent-25
+tableFreq$PositiveGap=ifelse(tableFreq$gap>0,"Yes","No")
+
+# save data frame: tableFreq
+write.csv(tableFreq,"tableFreq.csv",row.names = F)
+```
+
+
+```{r dataPrep-barsCrimeDay}
+# clear memory
+rm(list = ls())
+# collecting the data
+crimes=read.csv("SPD_Crime_Data__2008-Present.csv")
+crimes=crimes[complete.cases(crimes),]
+row.names(crimes)=NULL
+
+#set the date column
+library("lubridate")
+stringDate=crimes$Offense.Start.DateTime
+formatDate="%m/%d/%y %H:%M:%S %p" #also the time
+crimes$Offense.Start.DateTime=parse_date_time(stringDate,formatDate)
+#create columns with date information
+crimes$year=year(crimes$Offense.Start.DateTime)
+crimes$weekDay=wday(crimes$Offense.Start.DateTime,label = T)
+crimes$dayHour=hour(crimes$Offense.Start.DateTime)
+
+
+#subset
+crimes2019_22=crimes[crimes$year>2018 & crimes$year<2023,]
+rm(crimes)
+#categorize daytime
+dayTimeCat=c("Night", "Morning", "Afternoon", "Evening")
+crimes2019_22$dayTime = cut(x=crimes2019_22$dayHour, 
+                            breaks = c(0,6,12,18,23), 
+                            labels = dayTimeCat,
+                            include.lowest=TRUE)
+#changing capitalization 
+library(stringr)
+#### first renaming column
+names(crimes2019_22)=gsub("Offense.Parent.Group",#old names
+                          "crimeName",#new names
+                          names(crimes2019_22)) #all current names
+#### then...
+crimes2019_22$crimeName=str_to_title(crimes2019_22$crimeName)
+
+#two way table facet plot
+CrimeDay=table(crimes2019_22$crimeName,
+               crimes2019_22$dayTime)
+#making a data frame from contingency table
+CrimeDayDF=as.data.frame(CrimeDay)
+CrimeDay_mgCol=prop.table(CrimeDay,margin = 2) #marginal
+names(CrimeDayDF)=c("crime","daytime","counts")#renaming
+#adding marginal
+CrimeDayDF$share=as.data.frame(CrimeDay_mgCol)[,3]
+CrimeDayDF$share=round(100*CrimeDayDF$share,1)
+# save table
+write.csv(CrimeDayDF,"CrimebyDaytime_2019_22.csv",row.names=F)
+saveRDS(crimes2019_22,'crimes2019_22.rds')
+```
+
+
+
+```{r dataPrep-LineCrimeTime, message=FALSE}
+# clear memory
+rm(list = ls())
+crimes=readRDS('crimes2019_22.rds')
+
+#saving TOP 4 crimes
+topCrimes=names(tail(sort(table(crimes$crimeName)),4))
+
+#recoding crimes in a new variable
+crimes$crimeMini=ifelse(crimes$crimeName %in%topCrimes,crimes$crimeName,"Other")
+#recoding the new variable
+crimes$crimeMini=gsub("Assault Offenses","Asault",crimes$crimeMini)
+crimes$crimeMini=gsub("Burglary/Breaking&Entering","Burglary",crimes$crimeMini)
+crimes$crimeMini=gsub("Destruction/Damage/Vandalism Of Property","Vandalism",crimes$crimeMini)
+crimes$crimeMini=gsub("Larceny-Theft","Theft",crimes$crimeMini)
+
+#no missing
+crimes=crimes[complete.cases(crimes),]
+
+#create column year-month
+library(lubridate)
+crimes$year_week <- floor_date(crimes$Offense.Start.DateTime,"week")
+
+
+saveRDS(crimes,'crimes2019_22.rds')
+
+# prepare count per month-year
+crimeDate=as.data.frame(table(crimes$year_week))  # date will be a factor
+names(crimeDate)=c("date",'count')
+#formatting column in Freq Table:
+crimeDate$date=as.Date(crimeDate$date)
+saveRDS(crimeDate,"crimeWeeklyCount.rds") # to keep date format
+```
+
+
+
+```{r dataPrep-citiesLong}
+# clean memory
+rm(list = ls()) 
+
+# location of the data
+link="safeCitiesIndexAll.xlsx"
+
+# 'rio' can be used to import EXCEL files:
+library(rio)
+safe=import(link)
+
+library(magrittr)
+safe$DIN=apply(safe[,c(grep("D_In_",names(safe) ))],1,mean)%>%round(2)
+safe$DOUT=apply(safe[,c(grep("D_Out_",names(safe) ))],1,mean)%>%round(2)
+
+safe$HIN=apply(safe[,c(grep("H_In_",names(safe) ))],1,mean)%>%round(2)
+
+safe$HOUT=apply(safe[,c(grep("H_Out_", names(safe) ))],1,mean)%>%round(2)
+
+safe$IIN=apply(safe[,c(grep("I_In_", names(safe) ))],1,mean)%>%round(2)
+
+safe$IOUT=apply(safe[,c(grep("I_Out_", names(safe) ))],1,mean)%>%round(2)
+
+safe$PIN=apply(safe[,c(grep("P_In_", names(safe) ))],1,mean)%>%round(2)
+
+safe$POUT=apply(safe[,c(grep("P_Out_", names(safe) ))],1,mean)%>%round(2)
+
+safeINS=safe[,c(1,grep("IN$", colnames(safe)))] # '$' for 'end with'.
+
+names(safeINS)=c("city",'Digital','Health','Infrastructure','Personal')
+safeINS_long=reshape2::melt(safeINS,id.vars = 'city')
+
+write.csv(safeINS_long,"safeINS_long.csv")
+```
+
+
+
+```{r dataPrep-citiesCluster}
+# clean memory
+rm(list = ls()) 
+
+# location of the data
+link="safeCitiesIndexAll.xlsx"
+
+# 'rio' can be used to import EXCEL files:
+library(rio)
+safe=import(link)
+
+allIN=safe[,c(grep("_In_", names(safe) ))]
+allIN$city=safe$city
+dist_in_safe=dist(allIN[,-24])
+
+processResults= cluster::pam(x=dist_in_safe,
+              k = 3, cluster.only = F)
+
+#add to dataframe
+allIN$cluster=processResults$clustering
+
+theMap=cmdscale(dist_in_safe,k = 2)
+
+allIN$dim1=theMap[,1]
+allIN$dim2=theMap[,2]
+
+write.csv(allIN,'allIN.csv')
+```
+
+
+```{r dataPrep-MapYears, message=FALSE,warning=FALSE, prompt=FALSE}
+# clean memory
+rm(list = ls()) 
+crimes=readRDS("crimes2019_22.rds")
+#names(crimes)
+ToKeep=c("year",'crimeMini',"MCPP","Longitude","Latitude"  )
+crimeTimePlace=crimes[,ToKeep]
+rm(crimes) # remove from memory
+
+#table(crimeTimePlace$MCPP) # check MCPP names, then correct
+crimeTimePlace$MCPP=ifelse(crimeTimePlace$MCPP=='CAPTIOL HILL',
+                           "CAPITOL HILL", #yes
+                           crimeTimePlace$MCPP) #no
+crimeTimePlace$MCPP=ifelse(crimeTimePlace$MCPP%in%c('UNKNOWN',"<Null>"),
+                           NA,
+                           crimeTimePlace$MCPP)
+# get rid of NA
+crimeTimePlace=crimeTimePlace[complete.cases(crimeTimePlace),]
+
+
+
+# counting crimes per year and neighborhood
+crimeYear=as.data.frame(table(crimeTimePlace$MCPP,crimeTimePlace$year))
+saveRDS(crimeTimePlace,'crimeTimePlace2019_22.rds')
+rm(crimeTimePlace)
+names(crimeYear)=c("NEIGHBORHOOD",'year','count')
+# making sure it is a text:
+crimeYear$NEIGHBORHOOD=as.character(crimeYear$NEIGHBORHOOD)
+
+library(sf)
+NeighborhoodMap=read_sf("Micro_Community_Policing_Plans.geojson")
+# find what is not matching
+# x=NeighborhoodMap$NEIGHBORHOOD
+# y=crimeYear$NEIGHBORHOOD
+# setdiff(union(x,y),intersect(x,y))
+
+crimeYear[crimeYear$NEIGHBORHOOD=="MADRONA/LESCHI",'NEIGHBORHOOD']="LESCHI/MADRONA"
+crimeYear[crimeYear$NEIGHBORHOOD=="CHINATOWN/INTERNATIONAL DISTRICT",'NEIGHBORHOOD']="INTERNATIONAL DISTRICT"
+
+# adding columns to map (long)
+NeighborhoodMap_Long=merge(NeighborhoodMap,crimeYear)
+# saving
+st_write(NeighborhoodMap_Long,
+         "NeighborhoodCrime_polygons_Long.geojson",
+         delete_dsn = T)
+write.csv(crimeYear,"crimeYearLong.csv")
+crimeYear_w=reshape(crimeYear, 
+                    idvar="NEIGHBORHOOD",
+                    timevar="year",
+                    v.names="count",
+                    direction="wide", sep="_")
+write.csv(crimeYear_w,"crimeYearWide.csv")
+
+
+NeighborhoodMap_Wide=merge(NeighborhoodMap,crimeYear_w)
+
+# saving
+st_write(NeighborhoodMap_Wide,
+         "NeighborhoodCrime_polygons_Wide.geojson",
+         delete_dsn = T)
+
+```
+
+
+```{r dataPrep-NeighborhoodCrime_points}
+# clean memory
+rm(list = ls()) 
+crimeTimePlace=readRDS('crimeTimePlace2019_22.rds')
+#coordinates as spatial elements
+library(sf)
+NeighborhoodMap=read_sf("Micro_Community_Policing_Plans.geojson")
+crimes_points_map = st_as_sf(crimeTimePlace, 
+                         coords = c("Longitude","Latitude"),
+                         crs = st_crs(NeighborhoodMap)) # projection
+
+# ensuring points are the same area
+boundsMap=st_bbox(NeighborhoodMap)%>% st_as_sfc()
+
+crimes_points_map=st_intersection(crimes_points_map,
+                               boundsMap)
+#saving all
+st_write(crimes_points_map, "crimes_points_map.geojson",delete_dsn = T)
+
+
+#who are the worst 4 crime locations?
+worst_4=names(head(sort(table(crimes_points_map$MCPP),decreasing = T),4))
+
+
+#saving just top 4 without Other
+
+crimes_points_worst_4=crimes_points_map[crimes_points_map$MCPP%in%worst_4,]
+
+NeighborhoodCrime_points_worst4=crimes_points_worst_4[crimes_points_worst_4$crimeMini!='Other',]
+st_write(NeighborhoodCrime_points_worst4, "NeighborhoodCrime_points_worst4.geojson",delete_dsn = T)
+
+# # saving each top
+# top1=crimes_points_map_allTop4[crimes_points_map_allTop4$MCPP==top_4[1],]
+# st_write(top1, "crimes_points_map_top1.geojson",delete_dsn = T)
+# 
+# # saving each top
+# top2=crimes_points_map_allTop4[crimes_points_map_allTop4$MCPP==top_4[2],]
+# st_write(top2, "crimes_points_map_top2.geojson",delete_dsn = T)
+# 
+# # saving each top
+# top3=crimes_points_map_allTop4[crimes_points_map_allTop4$MCPP==top_4[3],]
+# st_write(top3, "crimes_points_map_top3.geojson",delete_dsn = T)
+# 
+# # saving each top
+# top4=crimes_points_map_allTop4[crimes_points_map_allTop4$MCPP==top_4[4],]
+# st_write(top4, "crimes_points_map_top4.geojson",delete_dsn = T)
+```
+
+

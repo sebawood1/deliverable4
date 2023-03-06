@@ -1,0 +1,241 @@
+"","city","variable","value"
+"1","Abu Dhabi","Digital",63.33
+"2","Amsterdam","Digital",80
+"3","Athens","Digital",60
+"4","Bangkok","Digital",28.33
+"5","Barcelona","Digital",80
+"6","Beijing","Digital",63.33
+"7","Bogota","Digital",41.67
+"8","Brussels","Digital",80
+"9","Buenos Aires","Digital",66.67
+"10","Cairo","Digital",26.67
+"11","Caracas","Digital",46.67
+"12","Casablanca","Digital",46.67
+"13","Chicago","Digital",100
+"14","Dallas","Digital",100
+"15","Delhi","Digital",63.33
+"16","Dhaka","Digital",26.67
+"17","Doha","Digital",58.33
+"18","Frankfurt","Digital",80
+"19","Ho Chi Minh City","Digital",21.67
+"20","Hong Kong","Digital",100
+"21","Istanbul","Digital",60
+"22","Jakarta","Digital",28.33
+"23","Jeddah","Digital",58.33
+"24","Johannesburg","Digital",58.33
+"25","Karachi","Digital",35
+"26","Kuala Lumpur","Digital",58.33
+"27","Kuwait City","Digital",41.67
+"28","Lima","Digital",58.33
+"29","London","Digital",80
+"30","Los Angeles","Digital",100
+"31","Madrid","Digital",80
+"32","Manila","Digital",31.67
+"33","Melbourne","Digital",90
+"34","Mexico City","Digital",58.33
+"35","Milan","Digital",83.33
+"36","Moscow","Digital",41.67
+"37","Mumbai","Digital",63.33
+"38","New York","Digital",100
+"39","Osaka","Digital",78.33
+"40","Paris","Digital",73.33
+"41","Quito","Digital",48.33
+"42","Rio de Janeiro","Digital",43.33
+"43","Riyadh","Digital",48.33
+"44","Rome","Digital",80
+"45","San Francisco","Digital",100
+"46","Santiago","Digital",58.33
+"47","Sao Paulo","Digital",43.33
+"48","Seoul","Digital",66.67
+"49","Shanghai","Digital",53.33
+"50","Singapore","Digital",95
+"51","Stockholm","Digital",75
+"52","Sydney","Digital",90
+"53","Taipei","Digital",88.33
+"54","Tehran","Digital",16.67
+"55","Tokyo","Digital",88.33
+"56","Toronto","Digital",90
+"57","Washington DC","Digital",90
+"58","Wellington","Digital",68.33
+"59","Yangon","Digital",16.67
+"60","Zurich","Digital",75
+"61","Abu Dhabi","Health",55.91
+"62","Amsterdam","Health",78.95
+"63","Athens","Health",64.93
+"64","Bangkok","Health",55.28
+"65","Barcelona","Health",73.86
+"66","Beijing","Health",69.49
+"67","Bogota","Health",53.25
+"68","Brussels","Health",80.66
+"69","Buenos Aires","Health",73.2
+"70","Cairo","Health",42.37
+"71","Caracas","Health",39.28
+"72","Casablanca","Health",43.27
+"73","Chicago","Health",70.16
+"74","Dallas","Health",64.89
+"75","Delhi","Health",57.26
+"76","Dhaka","Health",28.62
+"77","Doha","Health",50.13
+"78","Frankfurt","Health",84.16
+"79","Ho Chi Minh City","Health",47.77
+"80","Hong Kong","Health",72.89
+"81","Istanbul","Health",53.43
+"82","Jakarta","Health",39.76
+"83","Jeddah","Health",50.22
+"84","Johannesburg","Health",56.17
+"85","Karachi","Health",31.69
+"86","Kuala Lumpur","Health",54.17
+"87","Kuwait City","Health",50.86
+"88","Lima","Health",55.06
+"89","London","Health",68.74
+"90","Los Angeles","Health",69.79
+"91","Madrid","Health",71.78
+"92","Manila","Health",45.87
+"93","Melbourne","Health",75.18
+"94","Mexico City","Health",58.92
+"95","Milan","Health",70.75
+"96","Moscow","Health",74.02
+"97","Mumbai","Health",45.33
+"98","New York","Health",72.87
+"99","Osaka","Health",86.9
+"100","Paris","Health",81.04
+"101","Quito","Health",39.97
+"102","Rio de Janeiro","Health",55.47
+"103","Riyadh","Health",51.41
+"104","Rome","Health",68.42
+"105","San Francisco","Health",69.02
+"106","Santiago","Health",52.85
+"107","Sao Paulo","Health",56.58
+"108","Seoul","Health",80.39
+"109","Shanghai","Health",66.32
+"110","Singapore","Health",71.23
+"111","Stockholm","Health",71.47
+"112","Sydney","Health",75.95
+"113","Taipei","Health",76.24
+"114","Tehran","Health",48.74
+"115","Tokyo","Health",83.36
+"116","Toronto","Health",74.01
+"117","Washington DC","Health",82.23
+"118","Wellington","Health",69.51
+"119","Yangon","Health",35.88
+"120","Zurich","Health",78.96
+"121","Abu Dhabi","Infrastructure",90
+"122","Amsterdam","Infrastructure",94
+"123","Athens","Infrastructure",72
+"124","Bangkok","Infrastructure",60.5
+"125","Barcelona","Infrastructure",96.5
+"126","Beijing","Infrastructure",70.5
+"127","Bogota","Infrastructure",63
+"128","Brussels","Infrastructure",88.5
+"129","Buenos Aires","Infrastructure",87.5
+"130","Cairo","Infrastructure",57
+"131","Caracas","Infrastructure",38
+"132","Casablanca","Infrastructure",51.5
+"133","Chicago","Infrastructure",90.5
+"134","Dallas","Infrastructure",80.5
+"135","Delhi","Infrastructure",37.5
+"136","Dhaka","Infrastructure",21
+"137","Doha","Infrastructure",75.5
+"138","Frankfurt","Infrastructure",95
+"139","Ho Chi Minh City","Infrastructure",43
+"140","Hong Kong","Infrastructure",95.5
+"141","Istanbul","Infrastructure",66
+"142","Jakarta","Infrastructure",43
+"143","Jeddah","Infrastructure",47
+"144","Johannesburg","Infrastructure",52
+"145","Karachi","Infrastructure",26
+"146","Kuala Lumpur","Infrastructure",70
+"147","Kuwait City","Infrastructure",72.5
+"148","Lima","Infrastructure",57.5
+"149","London","Infrastructure",92.5
+"150","Los Angeles","Infrastructure",90.5
+"151","Madrid","Infrastructure",96.5
+"152","Manila","Infrastructure",48.5
+"153","Melbourne","Infrastructure",95.5
+"154","Mexico City","Infrastructure",63.5
+"155","Milan","Infrastructure",89.5
+"156","Moscow","Infrastructure",83.5
+"157","Mumbai","Infrastructure",32.5
+"158","New York","Infrastructure",90.5
+"159","Osaka","Infrastructure",96.5
+"160","Paris","Infrastructure",92.5
+"161","Quito","Infrastructure",41
+"162","Rio de Janeiro","Infrastructure",79
+"163","Riyadh","Infrastructure",37
+"164","Rome","Infrastructure",94.5
+"165","San Francisco","Infrastructure",90.5
+"166","Santiago","Infrastructure",84
+"167","Sao Paulo","Infrastructure",79
+"168","Seoul","Infrastructure",89.5
+"169","Shanghai","Infrastructure",70.5
+"170","Singapore","Infrastructure",96.5
+"171","Stockholm","Infrastructure",95
+"172","Sydney","Infrastructure",95.5
+"173","Taipei","Infrastructure",80.5
+"174","Tehran","Infrastructure",68.5
+"175","Tokyo","Infrastructure",96.5
+"176","Toronto","Infrastructure",90.5
+"177","Washington DC","Infrastructure",90.5
+"178","Wellington","Infrastructure",97.5
+"179","Yangon","Infrastructure",30
+"180","Zurich","Infrastructure",95
+"181","Abu Dhabi","Personal",71.8
+"182","Amsterdam","Personal",92.61
+"183","Athens","Personal",64.54
+"184","Bangkok","Personal",61.61
+"185","Barcelona","Personal",90.95
+"186","Beijing","Personal",85
+"187","Bogota","Personal",65.18
+"188","Brussels","Personal",83.39
+"189","Buenos Aires","Personal",68.32
+"190","Cairo","Personal",77.32
+"191","Caracas","Personal",52.21
+"192","Casablanca","Personal",57.19
+"193","Chicago","Personal",88.75
+"194","Dallas","Personal",82.86
+"195","Delhi","Personal",89.17
+"196","Dhaka","Personal",74.46
+"197","Doha","Personal",88.62
+"198","Frankfurt","Personal",91.73
+"199","Ho Chi Minh City","Personal",35
+"200","Hong Kong","Personal",92.02
+"201","Istanbul","Personal",71.78
+"202","Jakarta","Personal",54.94
+"203","Jeddah","Personal",42.82
+"204","Johannesburg","Personal",61.1
+"205","Karachi","Personal",37.01
+"206","Kuala Lumpur","Personal",84.46
+"207","Kuwait City","Personal",69.43
+"208","Lima","Personal",61.1
+"209","London","Personal",94.16
+"210","Los Angeles","Personal",89.55
+"211","Madrid","Personal",90.95
+"212","Manila","Personal",75.96
+"213","Melbourne","Personal",95.17
+"214","Mexico City","Personal",78
+"215","Milan","Personal",80.11
+"216","Moscow","Personal",56.96
+"217","Mumbai","Personal",89.17
+"218","New York","Personal",87.85
+"219","Osaka","Personal",95.59
+"220","Paris","Personal",79.92
+"221","Quito","Personal",48.75
+"222","Rio de Janeiro","Personal",80.34
+"223","Riyadh","Personal",42.82
+"224","Rome","Personal",80.11
+"225","San Francisco","Personal",89.55
+"226","Santiago","Personal",66.19
+"227","Sao Paulo","Personal",80.34
+"228","Seoul","Personal",90.17
+"229","Shanghai","Personal",85
+"230","Singapore","Personal",94.88
+"231","Stockholm","Personal",84.59
+"232","Sydney","Personal",95.17
+"233","Taipei","Personal",93.87
+"234","Tehran","Personal",47.26
+"235","Tokyo","Personal",95.59
+"236","Toronto","Personal",93.62
+"237","Washington DC","Personal",93.74
+"238","Wellington","Personal",94.46
+"239","Yangon","Personal",38.32
+"240","Zurich","Personal",78.36

@@ -1,0 +1,542 @@
+---
+title: "Final Project (part 2)"
+output:
+  html_document:
+    code_folding: "hide"
+    df_print: paged
+---
+
+Let's prepara the plots. You will also save the plots as when they are done.
+
+
+```{r plot-BoxReducedLunch, message=FALSE, warning=FALSE}
+# clean memory
+rm(list = ls()) 
+# link
+link='eduwa.rda'
+
+#getting the data TABLE from the file:
+load(file=link)
+eduwa=eduwa[complete.cases(eduwa),]#no missing values
+
+
+
+# THE BOXPLOT
+library(ggplot2)
+## base
+base= ggplot(eduwa,
+             aes(x=0,y = Reduced.Lunch)) + 
+      theme_classic()  
+
+##  boxplot
+b1= base + geom_boxplot()
+
+## horizontal
+b1=b1 +coord_flip()
+
+## no text on the vertical
+b1=b1+  theme(axis.text.x = element_blank(),
+              axis.ticks.x = element_blank(),
+              axis.title.x = element_blank())
+
+## customizing titles
+textForCaption="Source: WA State official records\nNote: Relevant values for boxplot shown on axis.\nMean value in blue."
+BoxReducedLunch=b1 + labs(title = "Reduced lunch distribution",
+             subtitle = "All grades - WA State (2023)",
+             caption = textForCaption,
+             y= "Count of Students benefitted")
+
+BoxReducedLunch
+```
+
+```{r save-BoxReducedLunch, echo=FALSE}
+#saving plot
+saveRDS(BoxReducedLunch, file = "BoxReducedLunch.rds")
+```
+
+
+```{r plot-LolliSchoolsLocation}
+# clean memory
+rm(list = ls()) 
+#read in data frame
+tableFreq=read.csv("tableFreq.csv")
+
+#THE LOLLIPOP
+## base
+base = ggplot(tableFreq, aes(x=Locale,
+                             y=gap)) +
+             theme_classic()
+
+## order of sticks
+base= base + scale_x_discrete(limits=tableFreq$Locale)
+
+# making the sticks
+lp1=base + geom_segment(aes(y = 0, yend = gap,
+                            x = Locale,
+                            xend = Locale),
+                        color = "gray") 
+# making the candy
+lp2=lp1 + geom_point(aes(color=PositiveGap)) 
+
+# adding text
+lp3= lp2 + geom_text(aes(label = round(gap,1)),
+                     nudge_x=0.15,#move to the right
+                     show.legend = FALSE) 
+# line at y=0
+lp4 = lp3 + geom_hline(yintercept = 0)
+
+# customizing axis: element_blank() means NOT TO SHOW
+lp5 = lp4 + theme(axis.ticks.y = element_blank(),
+                  axis.title.y = element_blank(),
+                  axis.line.y = element_blank(),
+                  axis.text.y = element_blank())
+lp6=lp5 + theme(axis.ticks.x = element_blank(),
+                axis.title.x = element_blank(),
+                axis.line.x = element_blank(),
+                axis.text.x = element_blank())
+# labels for sticks
+lp7 = lp6 +  geom_label(aes(label=Locale),
+                        color ='black ',
+                        size =3,
+                        y=0,
+                        show.legend = FALSE ) 
+# customizing legend position
+lp8= lp7 + theme(legend.position = c(0.8,0.3),
+                 legend.background = element_rect(color='black'))
+
+# labs
+textTitle="Share of schools by Location"
+textCapt="Source: WA Official Records.\nNote: Lines represent distance from 25%"
+LolliSchoolsLocation=lp8 + labs(title = textTitle,
+           subtitle = "WA State 2023",
+           caption = textCapt,
+           color="Above 25%?")
+LolliSchoolsLocation
+```
+
+
+```{r save-LolliSchoolsLocation, echo=FALSE}
+#save plot
+saveRDS(LolliSchoolsLocation, file = "LolliSchoolsLocation.rds")
+```
+
+
+
+
+```{r plot-barsCrimeDay}
+rm(list = ls())
+CrimeDayDF=read.csv("CrimebyDaytime_2019_22.csv")
+
+# new base
+base  = ggplot(CrimeDayDF, 
+               aes(x = reorder(crime, share), 
+                   y = share ) ) + theme_minimal()
+#bars
+bars = base + geom_bar(stat = "identity" ) 
+
+#bars facetted and flipped
+barsFct = bars + facet_grid( ~ daytime)  + coord_flip() 
+
+# customizing y axis
+barsFct=barsFct + theme(axis.text.y = element_text(size=7,
+                                                   angle = 20)) 
+# customizing text in bars
+barsFct=barsFct + geom_text(aes(label=ifelse(share>9,
+                                             share,
+                                             "")),
+                            nudge_y = 5,
+                            size=2.5) 
+# labs
+textCaption="Source: Seattle Open Data Portal\nNote: Annotations if >=10%"
+barsCrimeDay=barsFct + labs(title = "Crimes by daytime",
+                       subtitle = "Seattle - WA, 2019-2022",
+                       x=" ", y= "Percent (%)",
+                       caption = textCaption)
+
+barsCrimeDay
+
+```
+
+```{r save-barsCrimeDay, echo=FALSE}
+saveRDS(barsCrimeDay, file = "barsCrimeDay.rds")
+```
+
+
+
+```{r plot-LineCrimeTime, message=FALSE}
+# clear memory
+rm(list = ls())
+library(ggplot2)
+crimeDate=readRDS("crimeWeeklyCount.rds")
+base=ggplot(crimeDate,
+            aes(x=date,y=count))
+lines=base  + geom_line(alpha=0.3) + stat_smooth(color = "red",
+                      method = "loess") 
+#labs
+captionText="Source: Seattle Open Data Portal\nNote:Trend computed using loess algorithm"
+
+Line_crimeTime=lines + labs(title = "Crimes in Seattle-WA",
+                            subtitle = "Weekly count, 2019-2022",
+                            caption = captionText)
+Line_crimeTime
+```
+
+```{r save-Line_crimeTime, echo=FALSE}
+saveRDS(Line_crimeTime, file = "Line_crimeTime.rds")
+```
+
+
+
+```{r plot-lolliSafetyCity}
+# clean memory
+rm(list = ls()) 
+safeINS_long=read.csv("safeINS_long.csv")
+base = ggplot(data=safeINS_long, 
+       aes(x=reorder(city, value,median),
+           y=value)) + theme_classic()
+point=base+geom_point(shape=5)
+lolli=point+geom_segment(aes(x=city,xend = city,
+                             y=0,yend = value),
+                         color='grey',linewidth=0.2)
+lolliFacet=lolli+facet_grid(~variable) + coord_flip()
+lolliSafetyCity= lolliFacet+ theme(axis.text.y = element_text(size = 5)) +
+                        labs(title = "Safety in cities",
+                             subtitle = "(Scores on Measures taken)",
+                             caption = "Source: The Economist",
+                             y="Percent(%)",
+                             x="")
+lolliSafetyCity
+```
+
+
+
+```{r save-lolliSafetyCity, echo=FALSE}
+saveRDS(lolliSafetyCity, file = "lolliSafetyCity.rds")
+```
+
+
+```{r plot-PointCitiesCluster, message=FALSE,warning=FALSE}
+# clean memory
+rm(list = ls()) 
+
+allIN=read.csv('allIN.csv')
+library(ggrepel)
+base=ggplot(allIN,aes(x=dim1,y=dim2,
+                       label = city)) + theme_void() 
+
+#labs
+textCaption="Source:The Economist\nNote: Clustering process followed k-medoids technique."
+textLegend="Clusters\n(labels do not\nrepresent order)"
+ps=base + labs(title = "Safety of cities",
+                     subtitle = "Scores on interventions (2023)",
+                     caption=textCaption,
+                     color=textLegend)
+
+PointCitiesCluster=ps + geom_text(aes(color=as.factor(cluster)),
+                                  size=1.5)
+
+pointsHere=ps + geom_point(aes(color=as.factor(cluster)))
+
+
+
+pointsHere=pointsHere + geom_text_repel(size=1.5,
+                        max.overlaps = 20) 
+
+pointsHere=pointsHere + theme(legend.background = element_rect(color='grey90'),
+               legend.title = element_text(size = 6,hjust = 0),
+               legend.position=c(0.2,0.05),
+               legend.direction = "horizontal")
+pointsHere
+```
+
+```{r save-PointCitiesCluster, echo=FALSE}
+saveRDS(PointCitiesCluster, file = "PointCitiesCluster.rds")
+```
+
+
+```{r plot-polygonMapCrime, message=FALSE}
+# clean memory
+rm(list = ls()) 
+library(sf)
+MapCount=read_sf("NeighborhoodCrime_polygons_Long.geojson")
+
+library(ggplot2)
+base=ggplot(data=MapCount) + theme_void()
+mapYears=base + geom_sf(aes(fill=count),
+                             color=NA)
+mapYears=mapYears + facet_grid(~year) 
+mapYears=mapYears + scale_fill_gradient(low = 'yellow',
+                                 high= 'blue')
+polygonMapCrime=mapYears + labs(title = "Crime events in Seattle by year",
+                         subtitle = "All crime types (2019-2022)",
+                         caption="Source: Seattle Open Data Portal\nand Seattle Police Department.")
+polygonMapCrime
+```
+
+```{r save-polygonMapCrime, echo=FALSE}
+saveRDS(polygonMapCrime, file = "polygonMapCrime.rds")
+```
+
+```{r plot-pointMapCrime, message=FALSE}
+# clean memory
+rm(list = ls()) 
+library(sf)
+PointLocations=read_sf("NeighborhoodCrime_points_worst4.geojson")
+
+
+library(ggplot2)
+base=ggplot(data=PointLocations) + theme_void()
+aMap=base + geom_sf(aes(color=MCPP),size=1, alpha=0.2)
+aMap=aMap+facet_grid(crimeMini~year) 
+
+#labs
+textTitle="Crime events in Seattle by year and type"
+textCapt="Source: Seattle Open Data Portal\nand Seattle Police Department."
+subText="Showing the Worse 4 Neighborhoods (2019-2022)"
+aMap=aMap + labs(title = textTitle,
+                   subtitle = subText,
+                   caption=textCapt)
+# this WILL be exported separately
+pointMapCrime=aMap + theme(strip.text.y = element_text(angle = -90))
+
+
+#alpha for legend symbols
+pointMapCrimeStatic= pointMapCrime + 
+         guides(colour = guide_legend(override.aes = 
+                                      list(alpha = 1))) 
+# reposition title and subtitle :
+pointMapCrimeStatic= pointMapCrimeStatic + 
+      theme(plot.title = element_text(vjust = 3,hjust=0.5), 
+            plot.subtitle = element_text(vjust = 4,hjust = 0.5))
+
+# reposition legend, and more
+pointMapCrimeStatic= pointMapCrimeStatic + theme(
+            legend.position=c(-0.7,0.3),
+            #space between text and symbol in legend
+            legend.spacing.x = unit(0,units = 'cm'),
+            legend.text = element_text(size=6)) #text size
+pointMapCrimeStatic
+```
+
+
+```{r save-pointMapCrime, echo=FALSE}
+
+saveRDS(pointMapCrime, file = "pointMapCrime.rds")
+
+saveRDS(pointMapCrimeStatic, file = "pointMapCrimeStatic.rds")
+```
+
+```{r plot-PolygonLeaflet}
+rm(list = ls()) 
+library(leaflet)
+library(sf)
+NeighBrHdCount=read_sf("NeighborhoodCrime_polygons_Wide.geojson")
+
+# preparePalette (no facet -then manually)
+crimeLong=read.csv("crimeYearLong.csv")
+paletteHere="YlOrBr"
+Cuts=5
+paletteFun=colorQuantile(palette = paletteHere, 
+                      domain = crimeLong$count,
+                      n = Cuts)# N bins (quantiles)
+
+LeafletPolyg2019 = leaflet() %>% addTiles() %>% 
+         addPolygons(data=NeighBrHdCount,
+                     label=~paste0(NEIGHBORHOOD,': ',count_2019),
+                     weight = 0, #width border
+                     opacity =  1, #  alpha of border
+                     fillOpacity = 0.8, # alpha fill
+                     fillColor = ~paletteFun(count_2019)) %>%
+          addLegend(position='bottomleft',
+            pal=paletteFun,values = crimeLong$count)
+
+LeafletPolyg2020 = leaflet() %>% addTiles() %>% 
+         addPolygons(data=NeighBrHdCount,
+                     label=~paste0(NEIGHBORHOOD,': ',count_2020),
+                     weight = 0, #width border
+                     opacity =  1, #  alpha of border
+                     fillOpacity = 0.8, # alpha fill
+                     fillColor = ~paletteFun(count_2020)) # coloreando
+
+LeafletPolyg2021 = leaflet() %>% addTiles() %>% 
+         addPolygons(data=NeighBrHdCount,
+                     label=~paste0(NEIGHBORHOOD,': ',count_2021),
+                     weight = 0, #width border
+                     opacity =  1, #  alpha of border
+                     fillOpacity = 0.8, # alpha fill
+                     fillColor = ~paletteFun(count_2021)) 
+
+
+LeafletPolyg2022 = leaflet() %>% addTiles() %>% 
+         addPolygons(data=NeighBrHdCount,
+                     label=~paste0(NEIGHBORHOOD,': ',count_2022),
+                     weight = 0, #width border
+                     opacity =  1, #  alpha of border
+                     fillOpacity = 0.8, # alpha fill
+                     fillColor = ~paletteFun(count_2022)) %>%
+  addLegend(position='topright',
+            pal=paletteFun,values = crimeLong$count,
+            labFormat = function(type, cuts,p) {
+                            n = length(cuts)
+                            cuts = paste0(cuts[-n], " - ",
+                                          cuts[-1])
+  })
+
+#####
+library(manipulateWidget)
+combineWidgets(LeafletPolyg2019,LeafletPolyg2020,
+               LeafletPolyg2021, LeafletPolyg2022)
+```
+
+
+
+```{r save-PolygonLeaflet}
+
+saveRDS(LeafletPolyg2019,"LeafletPolyg2019.rds")
+saveRDS(LeafletPolyg2020,"LeafletPolyg2020.rds")
+saveRDS(LeafletPolyg2021,"LeafletPolyg2021.rds")
+saveRDS(LeafletPolyg2022,"LeafletPolyg2022.rds")
+```
+
+
+```{r plot-PointsLeaflet}
+
+rm(list = ls()) 
+library(leaflet)
+library(sf)
+
+PointLocations=read_sf("NeighborhoodCrime_points_worst4.geojson")
+
+library(htmltools)
+
+title2019 <- tags$p(tags$b("2019"))
+title2020 <- tags$p(tags$b("2020"))
+title2021 <- tags$p(tags$b("2021"))
+title2022 <- tags$p(tags$b("2022"))
+
+MyCrimeGroup=c("Asault", "Burglary","Theft","Vandalism")
+Points19=PointLocations[PointLocations$year==2019,]
+Points20=PointLocations[PointLocations$year==2020,]
+Points21=PointLocations[PointLocations$year==2021,]
+Points22=PointLocations[PointLocations$year==2022,]
+
+LeafletPoints2019=leaflet() %>% addTiles() %>% 
+    addCircleMarkers(data=Points19[Points19$crimeMini=='Asault',],
+                     radius=1,
+                     group = "Asault")%>% 
+    addCircleMarkers(data = Points19[Points19$crimeMini=='Burglary',],
+                     radius=1,
+                     group = "Burglary")%>% 
+    addCircleMarkers(data = Points19[Points19$crimeMini=='Theft',],
+                     radius=1,
+                     group = "Theft")%>%
+    addCircleMarkers(data = Points19[Points19$crimeMini=='Vandalism',],
+                     radius=1,
+                     group = "Vandalism")%>%
+        addLayersControl(baseGroups = MyCrimeGroup,
+                     options = layersControlOptions(collapsed = FALSE))%>%
+            addControl(title2019, position = "bottomright" )
+
+LeafletPoints2020=leaflet() %>% addTiles() %>% 
+    addCircleMarkers(data=Points20[Points20$crimeMini=='Asault',],
+                     radius=1,
+                     group = "Asault")%>% 
+    addCircleMarkers(data = Points20[Points20$crimeMini=='Burglary',],
+                     radius=1,
+                     group = "Burglary")%>% 
+    addCircleMarkers(data = Points20[Points20$crimeMini=='Theft',],
+                     radius=1,
+                     group = "Theft")%>%
+    addCircleMarkers(data = Points20[Points20$crimeMini=='Vandalism',],
+                     radius=1,group = "Vandalism")%>%
+        addLayersControl(baseGroups = MyCrimeGroup,
+                         options = layersControlOptions(collapsed = FALSE))%>%
+            addControl(title2020, position = "bottomright" )
+##
+
+LeafletPoints2021=leaflet() %>% addTiles() %>% 
+    addCircleMarkers(data=Points21[Points21$crimeMini=='Asault',],
+                     radius=1,
+                     group = "Asault")%>% 
+    addCircleMarkers(data = Points21[Points21$crimeMini=='Burglary',],
+                     radius=1,
+                     group = "Burglary")%>% 
+    addCircleMarkers(data = Points21[Points21$crimeMini=='Theft',],
+                     radius=1,
+                     group = "Theft")%>%
+    addCircleMarkers(data = Points21[Points21$crimeMini=='Vandalism',],
+                     radius=1,
+                     group = "Vandalism")%>%
+        addLayersControl(baseGroups = MyCrimeGroup,
+                     options = layersControlOptions(collapsed = FALSE))%>%
+            addControl(title2021, position = "bottomright" )
+###
+
+LeafletPoints2022=leaflet() %>% addTiles() %>% 
+    addCircleMarkers(data=Points22[Points22$crimeMini=='Asault',], 
+                     radius=1,
+                     group = "Asault")%>% 
+    addCircleMarkers(data = Points22[Points22$crimeMini=='Burglary',],
+                     radius=1,
+                     group = "Burglary")%>% 
+    addCircleMarkers(data = Points22[Points22$crimeMini=='Theft',],
+                     radius=1,
+                     group = "Theft")%>%
+    addCircleMarkers(data = Points22[Points22$crimeMini=='Vandalism',],
+                     radius=1,
+                     group = "Vandalism")%>%
+        addLayersControl(baseGroups = MyCrimeGroup,
+                         options = layersControlOptions(collapsed = FALSE))%>%
+            addControl(title2022, position = "bottomright" )
+
+
+library(leaflet.minicharts) # syncWith
+library(manipulateWidget) # combineWidgets
+
+combineWidgets(LeafletPoints2019%>%
+    syncWith("maps"),
+     LeafletPoints2020%>%
+    syncWith("maps"),
+    
+     LeafletPoints2021%>%
+    syncWith("maps"),
+    
+     LeafletPoints2022%>%
+    syncWith("maps"))
+
+```
+
+```{r save-MapYearsPointLeaflet}
+
+
+saveRDS(LeafletPoints2019,"LeafletPoints2019.rds")
+saveRDS(LeafletPoints2020,"LeafletPoints2020.rds")
+saveRDS(LeafletPoints2021,"LeafletPoints2021.rds")
+saveRDS(LeafletPoints2022,"LeafletPoints2022.rds")
+```
+
+```{r plot-MapYearsPointLeaflet-cluster}
+LeafletPoints2019_clus=
+    leaflet() %>% addTiles() %>% 
+    addMarkers(data=Points19[Points19$crimeMini=='Asault',],
+               group = "Asault",
+               clusterOptions = markerClusterOptions())%>%
+    addMarkers(data=Points19[Points19$crimeMini=='Burglary',],
+               group = "Burglary",
+               clusterOptions = markerClusterOptions())%>%
+    addMarkers(data = Points19[Points19$crimeMini=='Theft',],
+               group = "Theft",
+               clusterOptions = markerClusterOptions())%>%
+    addMarkers(data = Points19[Points19$crimeMini=='Vandalism',],
+               group = "Vandalism",
+               clusterOptions = markerClusterOptions())%>%
+        addLayersControl(overlayGroups = MyCrimeGroup,
+                     options = layersControlOptions(collapsed = FALSE))%>%
+            addControl(title2019, position = "bottomright" )
+LeafletPoints2019_clus
+```
+
+```{r save-MapYearsPointLeaflet-cluster}
+saveRDS(LeafletPoints2019_clus,"LeafletPoints2019_clus.rds")
+```
+

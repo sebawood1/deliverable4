@@ -1,0 +1,143 @@
+---
+title: "R Notebook Dashborar"
+output: html_notebook
+---
+
+#1. We import the LSMS-ISA Nigeria Wave 3 Dataset from my personal repository
+```{r getData, eval=TRUE}
+library(rio)
+rm(list = ls())
+nigeria_w3<-read.csv('https://github.com/Sebastian-Wood-Visual-Analytics/deliverable1/raw/main/NGA_W3_EPAR.csv')
+#View(nigeria_w3)
+```
+
+#2. #Select some of the variables and create a new Dataset
+```{r}
+
+library(tidyverse)
+nigeria_w3 <- select(nigeria_w3, hhid, zone, rural, daily_percap_cons, months_food_insec)
+```
+
+We start constructing the Univariate Plot months_food_insec
+```{r}
+#You can not get a clear idea of what a data table has, so a simple frequency table is the first tool to see what these nominal data are telling us:
+# absolute values
+absoluteT=table(nigeria_w3$months_food_insec,
+                exclude = 'nothing') #include all values!
+absoluteT
+
+#The absolute count can be transformed into percent or relative frequencies:
+# relative values
+prop.table(absoluteT)
+
+#We should try using all the information possible, then it is a good idea to label the missing values:
+names(absoluteT)[8]='Unknown'
+
+#If you prefer that the range of the proportions be translated into percents you can do:
+propT=prop.table(absoluteT)*100
+#you get:
+propT
+
+# the pie plots the table:
+#pie(absoluteT)
+
+#Let’s turn our pie into a bar chart using: ggplot2.
+```
+
+```{r}
+#The basic steps to prepare a visual in ggplot2 are: 
+#Turn the frequency table into a data frame:
+# as data frame
+(tableFreq=as.data.frame(absoluteT))
+
+#The previous frequency table can be improved:
+# renaming data frame columns
+names(tableFreq)=c("monthfoodinsecure","Count")
+# adding percents:
+tableFreq$Percent=as.vector(propT)
+# then, you have:
+tableFreq
+
+#This data frame has the three columns, we will use second for our bars.
+# b. Call the library (you may need to install it first):
+library(ggplot2)
+
+#c. Create the base object, which is not a plot, just informing the main variables:
+#base GGPLOT2 starts with a "base", telling WHAT VARIABLES TO PLOT
+base= ggplot(data = tableFreq, 
+             aes(x = monthfoodinsecure,
+                 y = Percent)) 
+
+# D. On top of the previous object, add the layer that produces the main plots (the next layers will add or customize elements in the plot):
+plot1 = base + geom_bar(fill ="gray",
+                        stat = 'identity') 
+plot1
+```
+
+```{r}
+#The basic steps to prepare a visual in ggplot2 are: 
+#Turn the frequency table into a data frame:
+# as data frame
+(tableFreq=as.data.frame(absoluteT))
+
+#The previous frequency table can be improved:
+# renaming data frame columns
+names(tableFreq)=c("monthfoodinsecure","Count")
+# adding percents:
+tableFreq$Percent=as.vector(propT)
+# then, you have:
+tableFreq
+
+#This data frame has the three columns, we will use second for our bars.
+# b. Call the library (you may need to install it first):
+library(ggplot2)
+```
+
+
+You may also need to reduce more the data-ink ratio, so I recommend changing the theme to **classic**. This and the object _localesOrd_ can be added to the previous base:
+```{r}
+# You have a default bar plot now. From here, you start adding more layers that will change the default.
+
+#Add titles:
+titleText='Nigeria 2015-16: Food Insecurity for Agricultural Small-Scale Producers'
+sourceText='Source: Evans School Policy Analysis and Research Group (EPAR).'
+x_axis='Number of Months Food Insecure'
+y_axis='Percentage of Total Households surveyed (%)'
+# redo:
+#LABELS=paste0(round(tableFreq$Percent,2), '%')
+base= ggplot(data = tableFreq, 
+             aes(x = monthfoodinsecure,y = Percent)) 
+## adding these to base
+#base= base + scale_x_discrete(limits=localesOrd) 
+base= base + theme_classic()
+##
+plot1 = base + geom_bar(fill ="gray",
+                        stat = 'identity') 
+plot2 = plot1 + labs(title=titleText,
+                     x =x_axis, 
+                     y = y_axis,
+                     caption = sourceText)
+plot3 = plot2 # + geom_hline(yintercept = 12.5, 
+              #             linetype="dashed", 
+               #            size=1.5, 
+                #           alpha=0.5)
+plot4 = plot3 + scale_y_continuous(breaks=c(0,25,50,75),
+                                 limits = c(0, 80),
+                                 # expand = c(0, 0), #try?
+                            labels=unit_format(suffix = '%')) 
+
+plot5 = plot4 + theme(plot.caption = element_text(hjust = 0),
+                      plot.title = element_text(hjust = 0.5))
+
+
+#plot6 = plot5 + geom_text(vjust=0, #hjust if flipping
+#                          size = 4,#fontface = "bold",
+    #                      aes(y = Percent)
+#plot6 #+ coord_flip() # wanna flip the plot?
+```
+
+
+```{r save-plot5, echo=FALSE}
+#saving plot
+saveRDS(plot5, file = "plot5.rds")
+```

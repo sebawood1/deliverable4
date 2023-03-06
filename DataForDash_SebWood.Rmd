@@ -1,0 +1,190 @@
+---
+title: "Final Project (part 1)"
+output:
+  html_document:
+    code_folding: "hide"
+    df_print: paged
+---
+
+*Here we will create the data figures from Deliverables 1, 2, and 3. That will be saved and then moved to the Plots For Dash Notebook.
+
+
+#I. Deliverable 1 Univariate Relationship
+```{r}
+library(rio)
+rm(list = ls())
+nigeria_w3<-read.csv('https://github.com/Sebastian-Wood-Visual-Analytics/deliverable1/raw/main/NGA_W3_EPAR.csv')
+library(tidyverse)
+nigeria_w3 <- select(nigeria_w3, hhid, zone, rural, daily_percap_cons, months_food_insec)
+str(nigeria_w3,width = 70,strict.width='cut')
+#You can not get a clear idea of what a data table has, so a simple frequency table is the first tool to see what these nominal data are telling us:
+# absolute values
+absoluteT=table(nigeria_w3$months_food_insec,
+                exclude = 'nothing') #include all values!
+absoluteT
+
+#The absolute count can be transformed into percent or relative frequencies:
+# relative values
+prop.table(absoluteT)
+
+#We should try using all the information possible, then it is a good idea to label the missing values:
+names(absoluteT)[8]='Unknown'
+
+#If you prefer that the range of the proportions be translated into percents you can do:
+propT=prop.table(absoluteT)*100
+#you get:
+propT
+#The basic steps to prepare a visual in ggplot2 are: 
+#Turn the frequency table into a data frame:
+# as data frame
+(tableFreq=as.data.frame(absoluteT))
+
+#The previous frequency table can be improved:
+# renaming data frame columns
+names(tableFreq)=c("monthfoodinsecure","Count")
+# adding percents:
+tableFreq$Percent=as.vector(propT)
+# then, you have:
+tableFreq
+
+```
+
+```{r}
+# save tablefreq
+write.csv(tableFreq,"Frequencytable_deliv1.csv",row.names = F)
+#saveRDS()
+#write.csv(CrimeDayDF,"CrimebyDaytime_2019_22.csv",row.names=F)
+#saveRDS(crimes2019_22,'crimes2019_22.rds')
+```
+
+II. Plot 2 Deliverable 2 
+##Delivarable 2 Bivariate relationships : Categorical-Categorical
+
+```{r}
+library(rio)
+rm(list = ls())
+nigeria_w3<-read.csv('https://github.com/Sebastian-Wood-Visual-Analytics/deliverable1/raw/main/NGA_W3_EPAR.csv')
+library(tidyverse)
+nigeria_w3 <- select(nigeria_w3, hhid, zone, rural, daily_percap_cons, months_food_insec)
+zones_monthsfinsecure=table(nigeria_w3$zone,nigeria_w3$months_food_insec,
+                            exclude = '')
+zones_monthsfinsecure
+# computing column percent from contingency table
+library(magrittr) # for %>%
+(zones_monthsfinsecure.mgCol=prop.table(zones_monthsfinsecure,
+                            margin = 2) #2 means by column
+                             %>%round(.,3))
+#making a data frame from contingency table
+(zones_monthsfinsecureDF=as.data.frame(zones_monthsfinsecure))
+
+#We also have the table with marginal percents by column:
+
+as.data.frame(zones_monthsfinsecure.mgCol)
+
+#We should simply add the last column to the data frame of counts.
+
+zones_monthsfinsecureDF$share=as.data.frame(zones_monthsfinsecure.mgCol)[,3]
+zones_monthsfinsecureDF
+
+#We can change the names of the previous data frame:
+
+names(zones_monthsfinsecureDF)[1:3]=c("zones","m_foodins","counts")
+
+#then
+zones_monthsfinsecureDF
+```
+
+```{r}
+write.csv(zones_monthsfinsecureDF,"Frequencytable_deliv2.csv",row.names = F)
+
+```
+
+III. DELIVERABLE 3 Spatial Analysis using Nigeria LSMS-ISA 2015-16
+```{r}
+rm(list = ls())
+
+linkCSV='https://raw.githubusercontent.com/sebawood1/deliverable-3/main/EPAR_NGA_states.csv'
+
+dataNGA=read.csv(linkCSV)
+library(tidyverse)
+dataNGA <- select(dataNGA, state, daily_percap_cons, months_food_insec, lvstck_holding_tlu, months_food_insecure)
+str(dataNGA)
+boxplot(dataNGA[,c('daily_percap_cons','months_food_insec')])
+boxplot(dataNGA['months_food_insec'])
+boxplot(dataNGA['months_food_insecure'])
+boxplot(dataNGA['lvstck_holding_tlu'])
+dataNGA %>% mutate(months_food_insecure=1-months_food_insecure)
+dataNGA$daily_percap_cons_S=as.vector(scale(dataNGA$daily_percap_cons))
+dataNGA$months_food_insec_S=as.vector(scale(dataNGA$months_food_insec))
+dataNGA$months_food_insecure_S=as.vector(scale(dataNGA$months_food_insecure))
+dataNGA$lvstck_holding_tlu_S=as.vector(scale(dataNGA$lvstck_holding_tlu))
+library("tidyr")
+# dataNGA <- dataNGA %>% drop_na() This erases rows that contain NA in any variable
+vars <- c("daily_percap_cons","months_food_insecure", "lvstck_holding_tlu")
+dataNGA <- dataNGA %>% drop_na(any_of(vars)) # We delete states with no observations (no data)
+set.seed(123) # for replication purposes
+
+#variables needed
+scaledIndexes=c('daily_percap_cons_S','months_food_insecure_S', 'lvstck_holding_tlu')
+
+#computing distances among countries
+distMatrix=cluster::daisy(dataNGA[,scaledIndexes])
+
+#computing the clusters          
+res.pam=cluster::pam(x=distMatrix,
+                     k = 3,
+                     cluster.only = F,
+                     )
+dataNGA$cluster=as.factor(res.pam$clustering)
+theVars=c('daily_percap_cons_S','months_food_insecure_S','lvstck_holding_tlu','cluster')
+aggregate(.~cluster,
+          data=dataNGA[,theVars],
+          FUN=median)
+dataNGA$cluster=factor(dataNGA$cluster,
+                           levels=c(3,1,2),
+                           labels=c("Low","Mid","High"), 
+                           ordered=T)
+```
+
+Shapefile
+```{r}
+linkMap="https://github.com/sebawood1/deliverable-3/raw/main/mygeodata/sdr_subnational_boundaries2.geojson" 
+
+library(sf)
+mapNigeria=read_sf(linkMap)
+#dataNGA$farm_area_S=as.vector(scale(dataNGA$farm_area))
+dataNGA$REGNAME=dataNGA$state
+#mapNigeria %>% mutate_if(is.character, str_to_lower) -> mapNigeria
+mapNigeria[[19]] <- tolower(mapNigeria[[19]])
+
+mapNigeria_indexes=merge(mapNigeria, #map first
+                   dataNGA, 
+                   by='REGNAME') 
+
+```
+
+This is not working 
+```{r}
+#write.csv(mapNigeria,"MapNigeria1_Deliv3.csv", na = "NA",col_names=TRUE)
+#write.csv(mapNigeria_indexes,"MapNigeria2_Deliv3.csv",col_names = TRUE)
+```
+
+```{r}
+#install.packages('data.table')
+#library(data.table)
+#fwrite(mapNigeria, "attempt1.csv")
+```
+
+```{r}
+#install.packages('readr', dependencies = TRUE)
+library(readr)
+write_csv(mapNigeria, "attempt2.csv") #Worked!
+
+```
+
+```{r}
+write_csv(mapNigeria, "MapNigeria1_Deliv3_work.csv") #Worked!
+write_csv(mapNigeria_indexes, "MapNigeria2_Deliv3_work.csv") #Worked!
+
+```
+

@@ -1,0 +1,129 @@
+"crime","daytime","counts","share"
+"Animal Cruelty","Night",29,0
+"Arson","Night",285,0.4
+"Assault Offenses","Night",10222,12.8
+"Bad Checks","Night",102,0.1
+"Bribery","Night",0,0
+"Burglary/Breaking&Entering","Night",14462,18.1
+"Counterfeiting/Forgery","Night",513,0.6
+"Curfew/Loitering/Vagrancy Violations","Night",20,0
+"Destruction/Damage/Vandalism Of Property","Night",7817,9.8
+"Driving Under The Influence","Night",1837,2.3
+"Drug/Narcotic Offenses","Night",767,1
+"Drunkenness","Night",6,0
+"Embezzlement","Night",108,0.1
+"Extortion/Blackmail","Night",138,0.2
+"Family Offenses, Nonviolent","Night",98,0.1
+"Fraud Offenses","Night",7573,9.5
+"Gambling Offenses","Night",0,0
+"Homicide Offenses","Night",75,0.1
+"Human Trafficking","Night",16,0
+"Kidnapping/Abduction","Night",199,0.2
+"Larceny-Theft","Night",24433,30.7
+"Liquor Law Violations","Night",26,0
+"Motor Vehicle Theft","Night",4709,5.9
+"Peeping Tom","Night",18,0
+"Pornography/Obscene Material","Night",71,0.1
+"Prostitution Offenses","Night",26,0
+"Robbery","Night",1358,1.7
+"Sex Offenses","Night",886,1.1
+"Sex Offenses, Consensual","Night",8,0
+"Stolen Property Offenses","Night",645,0.8
+"Trespass Of Real Property","Night",2539,3.2
+"Weapon Law Violations","Night",700,0.9
+"Animal Cruelty","Morning",21,0
+"Arson","Morning",110,0.2
+"Assault Offenses","Morning",9896,15.5
+"Bad Checks","Morning",132,0.2
+"Bribery","Morning",1,0
+"Burglary/Breaking&Entering","Morning",6434,10.1
+"Counterfeiting/Forgery","Morning",340,0.5
+"Curfew/Loitering/Vagrancy Violations","Morning",26,0
+"Destruction/Damage/Vandalism Of Property","Morning",5674,8.9
+"Driving Under The Influence","Morning",409,0.6
+"Drug/Narcotic Offenses","Morning",797,1.2
+"Drunkenness","Morning",2,0
+"Embezzlement","Morning",66,0.1
+"Extortion/Blackmail","Morning",109,0.2
+"Family Offenses, Nonviolent","Morning",111,0.2
+"Fraud Offenses","Morning",7327,11.5
+"Gambling Offenses","Morning",1,0
+"Homicide Offenses","Morning",24,0
+"Human Trafficking","Morning",9,0
+"Kidnapping/Abduction","Morning",133,0.2
+"Larceny-Theft","Morning",22972,35.9
+"Liquor Law Violations","Morning",7,0
+"Motor Vehicle Theft","Morning",3623,5.7
+"Peeping Tom","Morning",9,0
+"Pornography/Obscene Material","Morning",40,0.1
+"Prostitution Offenses","Morning",11,0
+"Robbery","Morning",1283,2
+"Sex Offenses","Morning",305,0.5
+"Sex Offenses, Consensual","Morning",10,0
+"Stolen Property Offenses","Morning",593,0.9
+"Trespass Of Real Property","Morning",3032,4.7
+"Weapon Law Violations","Morning",482,0.8
+"Animal Cruelty","Afternoon",41,0.1
+"Arson","Afternoon",128,0.2
+"Assault Offenses","Afternoon",12917,16.1
+"Bad Checks","Afternoon",60,0.1
+"Bribery","Afternoon",1,0
+"Burglary/Breaking&Entering","Afternoon",8096,10.1
+"Counterfeiting/Forgery","Afternoon",322,0.4
+"Curfew/Loitering/Vagrancy Violations","Afternoon",22,0
+"Destruction/Damage/Vandalism Of Property","Afternoon",6776,8.5
+"Driving Under The Influence","Afternoon",735,0.9
+"Drug/Narcotic Offenses","Afternoon",1321,1.6
+"Drunkenness","Afternoon",5,0
+"Embezzlement","Afternoon",49,0.1
+"Extortion/Blackmail","Afternoon",90,0.1
+"Family Offenses, Nonviolent","Afternoon",153,0.2
+"Fraud Offenses","Afternoon",4144,5.2
+"Gambling Offenses","Afternoon",1,0
+"Homicide Offenses","Afternoon",38,0
+"Human Trafficking","Afternoon",7,0
+"Kidnapping/Abduction","Afternoon",144,0.2
+"Larceny-Theft","Afternoon",32001,39.9
+"Liquor Law Violations","Afternoon",51,0.1
+"Motor Vehicle Theft","Afternoon",5816,7.3
+"Peeping Tom","Afternoon",9,0
+"Pornography/Obscene Material","Afternoon",31,0
+"Prostitution Offenses","Afternoon",72,0.1
+"Robbery","Afternoon",2158,2.7
+"Sex Offenses","Afternoon",387,0.5
+"Sex Offenses, Consensual","Afternoon",6,0
+"Stolen Property Offenses","Afternoon",865,1.1
+"Trespass Of Real Property","Afternoon",2942,3.7
+"Weapon Law Violations","Afternoon",801,1
+"Animal Cruelty","Evening",29,0
+"Arson","Evening",167,0.2
+"Assault Offenses","Evening",10801,15.9
+"Bad Checks","Evening",11,0
+"Bribery","Evening",0,0
+"Burglary/Breaking&Entering","Evening",7582,11.1
+"Counterfeiting/Forgery","Evening",166,0.2
+"Curfew/Loitering/Vagrancy Violations","Evening",20,0
+"Destruction/Damage/Vandalism Of Property","Evening",6725,9.9
+"Driving Under The Influence","Evening",1716,2.5
+"Drug/Narcotic Offenses","Evening",819,1.2
+"Drunkenness","Evening",7,0
+"Embezzlement","Evening",15,0
+"Extortion/Blackmail","Evening",88,0.1
+"Family Offenses, Nonviolent","Evening",130,0.2
+"Fraud Offenses","Evening",1196,1.8
+"Gambling Offenses","Evening",1,0
+"Homicide Offenses","Evening",55,0.1
+"Human Trafficking","Evening",12,0
+"Kidnapping/Abduction","Evening",166,0.2
+"Larceny-Theft","Evening",25623,37.6
+"Liquor Law Violations","Evening",37,0.1
+"Motor Vehicle Theft","Evening",7031,10.3
+"Peeping Tom","Evening",7,0
+"Pornography/Obscene Material","Evening",26,0
+"Prostitution Offenses","Evening",235,0.3
+"Robbery","Evening",1756,2.6
+"Sex Offenses","Evening",482,0.7
+"Sex Offenses, Consensual","Evening",3,0
+"Stolen Property Offenses","Evening",634,0.9
+"Trespass Of Real Property","Evening",1897,2.8
+"Weapon Law Violations","Evening",691,1

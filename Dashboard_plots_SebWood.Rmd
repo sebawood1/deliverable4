@@ -1,0 +1,40 @@
+---
+title: "Class:Visual Analytics for Policy and Management - Dashboard by Sebastian Wood"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+```
+
+Column {data-width=650}
+-----------------------------------------------------------------------
+
+### Chart A: Deliverable 1. Univariate Relationship
+
+```{r}
+readRDS("Deliv1_plot6.rds")
+
+```
+
+Column {data-width=350}
+-----------------------------------------------------------------------
+
+### Chart B: Delivarable 2 Bivariate relationships - Categorical-Categorical
+
+
+```{r}
+readRDS("Deliv2.rds")
+
+```
+
+### Chart C: Deliverable 3:Spatial Analysis using Nigeria LSMS-ISA 2015-16
+
+```{r}
+readRDS("Deliv3map.rds")
+
+```
+

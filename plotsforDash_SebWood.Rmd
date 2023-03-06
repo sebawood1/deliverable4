@@ -1,0 +1,183 @@
+---
+title: "Final Project (part 2)"
+output:
+  html_document:
+    code_folding: "hide"
+    df_print: paged
+---
+
+Let's prepara the plots. You will also save the plots as when they are done.
+
+I. Plot 1 Deliverable 1.
+```{r}
+rm(list = ls())
+tableFreq=read.csv("Frequencytable_deliv1.csv")
+```
+
+```{r save-plot6}
+library(tidyverse)
+library(ggplot2)
+library(scales) # for "unit_format""
+
+# redo:
+titleText='Nigeria 2015-16: Food Insecurity for Agricultural Small-Scale Producers'
+sourceText='Source: Evans School Policy Analysis and Research Group (EPAR).'
+x_axis='Number of Months Food Insecure'
+y_axis='Percentage of Total Households surveyed (%)'
+paste0(round(tableFreq$Percent,2), '%')
+LABELS=paste0(round(tableFreq$Percent,2), '%')
+base= ggplot(data = tableFreq, 
+             aes(x = monthfoodinsecure,y = Percent)) 
+## adding these to base
+#base= base + scale_x_discrete(limits=localesOrd) 
+base= base + theme_classic()
+##
+plot1 = base + geom_bar(fill ="gray",
+                        stat = 'identity') 
+plot2 = plot1 + labs(title=titleText,
+                     x =x_axis, 
+                     y = y_axis,
+                     caption = sourceText)
+plot3 = plot2 # + geom_hline(yintercept = 12.5, 
+              #             linetype="dashed", 
+               #            size=1.5, 
+                #           alpha=0.5)
+plot4 = plot3 + scale_y_continuous(breaks=c(0,25,50,75),
+                                 limits = c(0, 80),
+                                 # expand = c(0, 0), #try?
+                            labels=unit_format(suffix = '%')) 
+
+plot5 = plot4 + theme(plot.caption = element_text(hjust = 0),
+                      plot.title = element_text(hjust = 0.5))
+
+plot6 = plot5 + geom_text(vjust=0,
+                          size=4,
+                          aes(y = Percent,
+                              label = round(Percent,1)))
+
+#plot6 = plot5 + geom_text(vjust=0, #hjust if flipping
+#                          size = 4,#fontface = "bold",
+ #                         aes(y = Percent,
+  #                           label = LABELS))
+plot5 #+ coord_flip() # wanna flip the plot?
+plot6
+```
+
+```{r save-barstableFreq, echo=FALSE}
+saveRDS(tableFreq, file = "Deliv1.rds")
+```
+
+```{r save-plot6, echo=FALSE}
+saveRDS(plot6, file = "Deliv1_plot6.rds")
+```
+
+II. Plot 2 Deliverable 2 
+##Delivarable 2 Bivariate relationships : Categorical-Categorical
+
+```{r}
+rm(list = ls())
+zones_monthsfinsecureDF=read.csv("Frequencytable_deliv2.csv")
+```
+
+```{r}
+library(ggplot2)
+#A first option you be to use a barplot with facets with bars dodged. Let’a make the first attempt.
+
+# base with only X and Y in 'aes()'
+baseBar = ggplot(zones_monthsfinsecureDF, aes(x = m_foodins, y = share ) ) 
+
+#the bars
+barPlot  = baseBar + geom_bar( stat = "identity" ) 
+
+barPlot
+#Now see the facets:
+
+# bar per day time with 'facet'
+barsFt = barPlot + facet_grid(~ zones) 
+
+barsFt
+#This does not look like the crosstable yet; let’s solve that:
+
+barsFt + coord_flip()
+# new base
+baseRE  = ggplot(zones_monthsfinsecureDF, 
+                 aes(x = m_foodins, #here
+                     y = share ) ) + theme_minimal()
+
+barPlotRE = baseRE + geom_bar( stat = "identity" ) 
+barFtRE = barPlotRE + facet_grid( ~ zones) 
+barFtRE= barFtRE + coord_flip() 
+
+
+barFtRE
+
+#Would you annotate the bars:
+
+barREann= barFtRE+ geom_text(aes(label=round(share,2)),
+                             nudge_y = 0.15)
+barREann
+
+#Let’s annotate conditionally instead:
+
+barCond=barFtRE + geom_text(aes(label=ifelse(share>0.05,# condition to annotate
+                                      round(share,2),"")),
+                     nudge_y = 0.15)
+barCond
+```
+
+```{r}
+#Add titles:
+titleText='Nigeria 2015-16: Food Insecurity for Agricultural SSP by Geographic Zones'
+sourceText='Source: Evans School Policy Analysis and Research Group (EPAR).'
+x_axis='Number of Months Food Insecure'
+y_axis='Percentage of Total Households surveyed (%)'
+check="Zones"
+barFtRE = barFtRE + labs(title=titleText,
+                     x =x_axis,
+                     y =y_axis,
+                     caption = sourceText,
+                     fill =check) 
+barFtRE
+
+#positions: 0 left / 1 right / 0.5 center
+barFtRE = barFtRE + theme(plot.caption = element_text(hjust = 0), 
+                      plot.title = element_text(hjust = 0.5))
+barFtRE
+
+#What about percents instead:
+
+barFtRE + geom_text(aes(label=ifelse(share>0.05,
+                                      percent(share,accuracy = 1),# %
+                                     "")),
+                     nudge_y = 0.1,size=3) + 
+           scale_y_continuous(labels = percent_format(accuracy = 1,suffix="")) #%
+```
+
+```{r save-barFtRE, echo=FALSE}
+saveRDS(barFtRE, file = "Deliv2.rds")
+```
+
+III. DELIVERABLE 3 Spatial Analysis using Nigeria LSMS-ISA 2015-16
+```{r}
+rm(list = ls())
+mapNigeria=read.csv("MapNigeria1_Deliv3_work.csv")
+mapNigeria_indexes=read.csv("MapNigeria2_Deliv3_work.csv")
+
+#mapNigeria=read.csv("MapNigeria1_Deliv3.csv")
+#mapNigeria_indexes=read.csv("MapNigeria2_Deliv3.csv")
+```
+
+```{r}
+library("tidyr")
+library(sf)
+library(tidyverse)
+library(ggplot2)
+# plot original map
+baseMap= ggplot(data=mapNigeria) + theme_classic() + 
+         geom_sf(aes(geometry = geometry,
+                 fill='grey', 
+                 color=NA))+ # border color #see
+  
+baseMap 
+```
+

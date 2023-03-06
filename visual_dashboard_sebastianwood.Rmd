@@ -1,0 +1,54 @@
+---
+title: "Class:Visual Analytics for Policy and Management - Dashboard by Sebastian Wood"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+```
+
+[comment]: first page notice use of ===
+
+Deliverable 1
+=====================================
+
+Column {.tabset}
+-----------------------------------------------------------------------
+
+### Univariate Categorical 
+
+```{r}
+readRDS("Deliv1_plot6.rds")
+
+```
+
+
+[comment]: Deliverable 2
+
+Deliverable 2 {data-orientation=rows}
+=====================================
+
+Row
+-----------------------------------------------------------------------
+
+### Bivariate Cat-Cat
+
+```{r}
+readRDS("Deliv2.rds")
+```
+
+
+Maps
+=====================================
+
+Column {.tabset .tabset-fade}
+------------------
+
+### Colored polygons
+
+```{r}
+readRDS("Deliv3map.rds")
+```
+
